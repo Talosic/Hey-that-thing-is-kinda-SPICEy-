@@ -1,0 +1,25 @@
+* Schematics Netlist *
+.include "../Models/MOSIS.txt"
+
+VVdd Vdd 0 DC 1.8 
+CC1 0 Vout 0.6p
+
+VVPul1 Vin 0 pulse(0 1.8 0.9n 0.2n 0.2n 1.8n 4n)
+
+
+MN1 vout Vin 0 0 ibm0p13nmos W=1.9u L=0.117u
+MP1 vout Vin vdd vdd ibm0p13pmos W=4.605u L=0.13u
+
+
+.tran 2p 8n 0n 
+.end
+
+.control
+run
+meas tran tlow2high TRIG V(Vout) val=0.18 rise=1 targ V(Vout) val=1.62 rise=1
+meas tran thigh2low TRIG V(Vout) val=1.62 fall=1 targ V(Vout) val=0.18 fall=1 
+
+set color0 = white
+set xbrushwidth = 5
+plot V(Vin) V(Vout)
+.endc

@@ -1,0 +1,38 @@
+* Buffer simulation
+.include "../Models/MOSIS.txt"
+*Cload 0 net1 100pF
+
+*Val = 1.62
+
+*Temprature at 125C, 952.3 Mhz
+*Temperature at -30C, 1.25 Ghz
+
+*Temperature regular at 1.128Ghz
+Vsupply vdd 0 1.8V
+.global vdd
+
+.subckt inv in out wp=5.4u wn=2.23u cap=100fF
+Mp0 out in vdd vdd ibm0p13pmos W='wp' L=0.13u
+Mn0 out in 0 0 ibm0p13nmos W='wn' L=0.12u
+Cc1 out 0 'cap'
+.ends
+
+xinv0 Vin net1 inv wp=5.4u wn=2.23u
+xinv1 net1 net2 inv wp=5.4u wn=2.23u
+xinv2 net2 net3 inv wp=5.4u wn=2.23u
+xinv3 net3 net4 inv wp=5.4u wn=2.23u
+xinv4 net4 Vin inv wp=5.4u wn=2.23u
+
+
+.TRAN 2p 9n
+.control
+run 
+set color0 = white
+set xbrushwidth = 5 
+plot v(Vin) v(net1) v(net2) v(net3) v(net4)
+meas tran tperiod TRIG V(net1) val=0.9 TD=1.7n RISE=3 TARG V(net1) val=0.9 TD=1.7n RISE=4
+
+meas tran tperiod TRIG V(net1) val=1.62 TD=1.7n FALL=4 TARG V(net1) val=0.18 TD=1.7n FALL=4
+meas tran tperiod TRIG V(net1) val=0.18 TD=1.7n RISE=4 TARG V(net1) val=1.62 TD=1.7n RISE=4
+.endc 
+.end

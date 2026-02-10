@@ -1,0 +1,17 @@
+* Schematics Netlist * 
+.include "..\Models\MOSIS.txt" 
+
+* voltage sources
+VVinA inA 0 pulse(0 1.8 4n 20p 20p 1n 1.4n)
+
+
+.tran 5p 28n 0n 
+.end
+
+.control
+run 
+set color0 = white
+set xbrushwidth = 5
+plot v(inA)
+.endc
+
